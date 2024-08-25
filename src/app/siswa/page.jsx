@@ -39,7 +39,9 @@ const PageSiswa = () => {
             try {
                 const { data: userData, error: userError } = await supabase
                     .from("user")
-                    .select("noIndukSiswa, username, email, profile_picture_url");
+                    .select(
+                        "noIndukSiswa, username, email, profile_picture_url"
+                    );
 
                 if (userError) throw userError;
 
@@ -56,7 +58,9 @@ const PageSiswa = () => {
                     return {
                         ...siswa,
                         username: user ? user.username : "Unknown",
-                        profile_picture_url: user ? user.profile_picture_url : null,
+                        profile_picture_url: user
+                            ? user.profile_picture_url
+                            : null,
                     };
                 });
 
@@ -109,18 +113,16 @@ const PageSiswa = () => {
 
     if (loading) return <p>Loading...</p>;
 
- 
-
     return (
         <>
             {/* <div class=""> */}
             <div
-          className={`absolute top-16 z-[-2] h-screen w-screen ${
-            theme === "light"
-              ? "absolute top-0 z-[-2] h-screen w-screen bg-white bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"
-              : "dark:bg-neutral-900"
-          }`}
-        >
+                className={`absolute top-16 z-[-2] h-screen w-screen ${
+                    theme === "light"
+                        ? "absolute top-0 z-[-2] h-screen w-screen bg-white bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"
+                        : ""
+                }`}
+            >
                 <main className="mx-auto container p-6 space-y-6  text-gray-800 dark:text-gray-100 pb-32">
                     <h1 className="text-3xl font-bold mb-6 text-center text-gray-900 dark:text-gray-100">
                         Siswa List
@@ -152,9 +154,9 @@ const PageSiswa = () => {
                                 key={siswa.id}
                                 className={`relative p-6 shadow-xl rounded-lg overflow-hidden text-gray-900 dark:text-gray-100 ${
                                     siswa.gender === 1
-                                        ? "border-l-4 border-blue-500 dark:border-blue-400"
-                                        : "border-l-4 border-pink-500 dark:border-pink-400"
-                                } bg-white dark:bg-neutral-800`}
+                                        ? "border-l-4 dark:border-l-2 border-blue-500 dark:border-blue-400"
+                                        : "border-l-4 dark:border-l-2 border-pink-500 dark:border-pink-400"
+                                } bg-card dark:bg-card`}
                             >
                                 <div className="absolute top-0 left-0 w-full h-32 overflow-hidden">
                                     <img
@@ -177,18 +179,18 @@ const PageSiswa = () => {
                                     <h2 className="font-semibold text-lg">
                                         {siswa.username}
                                     </h2>
-                                    <p className="text-gray-500 dark:text-gray-400">
+                                    <p className="text-gray-500 dark:text-card-foreground">
                                         Freelance Web Designer
                                     </p>
                                 </div>
                                 <CardContent className="relative text-center mt-4">
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    <p className="text-sm text-card-foreground dark:text-card-foreground mb-4">
                                         Gender:{" "}
                                         {siswa.gender === 1
                                             ? "Laki Laki"
                                             : "Perempuan"}
                                     </p>
-                                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                                    <div className="text-sm ">
                                         <Badge
                                             variant="outline"
                                             className={`text-sm ${
@@ -206,10 +208,10 @@ const PageSiswa = () => {
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        className="text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
+                                        className=""
                                         onClick={() =>
                                             router.push(
-                                                `${currentPathname}/${siswa.id}`
+                                                `${currentPathname}/${siswa.noIndukSiswa}`
                                             )
                                         }
                                     >
