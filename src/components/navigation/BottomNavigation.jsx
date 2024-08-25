@@ -1,6 +1,12 @@
 import React from "react";
 import Link from "next/link";
 import { Home, Book, Box, StickyNote } from "lucide-react";
+import { PersonStanding } from 'lucide-react';
+import { Smile } from 'lucide-react';
+import { UserRoundSearch } from 'lucide-react';
+import { CircleUserRound } from 'lucide-react';
+import { NotepadText } from 'lucide-react';
+
 
 export default function BottomNavigation() {
     return (
@@ -14,24 +20,24 @@ export default function BottomNavigation() {
                     <p className="text-sm  mt-1">Home</p>
                 </Link>
                 <Link
-                    href="/campaign/1"
+                    href="/siswa"
                     className="text-center flex-1 flex flex-col items-center"
                 >
-                    <StickyNote className="" size={24} />
-                    <p className="text-sm  mt-1">Campaign</p>
+                      <UserRoundSearch />
+                    <p className="text-sm  mt-1">Daftar Siswa</p>
                 </Link>
                 <Link
-                    href="/plot"
+                    href="/postingan"
                     className="text-center flex-1 flex flex-col items-center"
                 >
-                    <Book className="" size={24} />
-                    <p className="text-sm  mt-1">Plot</p>
+                 <NotepadText />
+                    <p className="text-sm  mt-1">postingan</p>
                 </Link>
                 <Link
-                    href="/profile"
+                    href="/profile/editprofile  "
                     className="text-center flex-1 flex flex-col items-center"
                 >
-                    <Box className="" size={24} />
+                    <CircleUserRound />
                     <p className="text-sm  mt-1">Profile</p>
                 </Link>
             </div>
