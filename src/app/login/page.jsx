@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useTheme } from "next-themes";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 export default function LoginPage() {
   const { theme } = useTheme();
@@ -161,9 +162,9 @@ export default function LoginPage() {
           <CardFooter className="flex flex-col items-center gap-4 p-6">
             <p className="text-sm text-gray-500">
               Don't have an account?{" "}
-              <a href="#" className="text-blue-600 hover:underline">
+              <Link href="/register" className="text-blue-600 hover:underline">
                 Sign Up
-              </a>
+              </Link>
             </p>
           </CardFooter>
         </Card>
