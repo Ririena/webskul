@@ -1,5 +1,5 @@
 "use client";
-
+import { Link as Linkg } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,10 @@ export default function EditProfile() {
             noAbsen: "",
             username: "",
             bio: "",
-            noIndukSiswa: "", // Add default value for new field
+            noIndukSiswa: "",
+            link_ig: "",
+            link_wa: "",
+            link_git: "",
         },
     });
 
@@ -54,8 +57,10 @@ export default function EditProfile() {
                     setValue("username", userData.username);
                     setValue("bio", userData.bio);
                     setValue("noIndukSiswa", userData.noIndukSiswa);
+                    setValue("link_wa", userData.link_wa);
+                    setValue("link_git", userData.link_git);
+                    setValue("link_ig", userData.link_ig);
 
-                    // Use the profile_picture_url directly if it exists
                     if (userData.profile_picture_url) {
                         setProfileImage(userData.profile_picture_url);
                     }
@@ -197,7 +202,7 @@ export default function EditProfile() {
                                 </label>
                                 <Input
                                     placeholder="Masukkan Nama Kamu"
-  className="mt-1 p-2 border rounded-lg w-full bg-input dark:focus:outline-none dark:focus:ring-ring focus:outline-none  focus:ring-2 dark:ring-1 focus:ring-ring dark:bg-input dark:border-border "
+                                    className="mt-1 p-2 border rounded-lg w-full bg-input dark:focus:outline-none dark:focus:ring-ring focus:outline-none  focus:ring-2 dark:ring-1 focus:ring-ring dark:bg-input dark:border-border "
                                     {...register("username", {
                                         required: "Username is required",
                                     })}
@@ -216,7 +221,7 @@ export default function EditProfile() {
                                 </label>
                                 <Input
                                     placeholder="Enter your student ID"
-  className="mt-1 p-2 border rounded-lg w-full bg-input dark:focus:outline-none dark:focus:ring-ring focus:outline-none  focus:ring-2 dark:ring-1 focus:ring-ring dark:bg-input dark:border-border "
+                                    className="mt-1 p-2 border rounded-lg w-full bg-input dark:focus:outline-none dark:focus:ring-ring focus:outline-none  focus:ring-2 dark:ring-1 focus:ring-ring dark:bg-input dark:border-border "
                                     {...register("noIndukSiswa", {
                                         required: "No Induk Siswa is required",
                                     })}
@@ -236,8 +241,42 @@ export default function EditProfile() {
                                 <Textarea
                                     rows="4"
                                     placeholder="Tell something about yourself..."
-                                     className="mt-1 p-2 border rounded-lg w-full bg-input dark:focus:outline-none dark:focus:ring-ring focus:outline-none  focus:ring-2 dark:ring-1 focus:ring-ring dark:bg-input dark:border-border "
+                                    className="mt-1 p-2 border rounded-lg w-full bg-input dark:focus:outline-none dark:focus:ring-ring focus:outline-none  focus:ring-2 dark:ring-1 focus:ring-ring dark:bg-input dark:border-border "
                                     {...register("bio")}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="flex  text-gray-700 dark:text-gray-300 font-medium">
+                                    Link IG
+                                </label>
+                                <Input
+                                    rows="4"
+                                    placeholder="Tell something about yourself..."
+                                    className="mt-1 p-2 border rounded-lg w-full bg-input dark:focus:outline-none dark:focus:ring-ring focus:outline-none  focus:ring-2 dark:ring-1 focus:ring-ring dark:bg-input dark:border-border "
+                                    {...register("link_ig")}
+                                />
+                            </div>
+                            <div>
+                                <label className="flex  text-gray-700 dark:text-gray-300 font-medium">
+                                    Link Whatsapp
+                                </label>
+                                <Input
+                                    rows="4"
+                                    placeholder="Tell something about yourself..."
+                                    className="mt-1 p-2 border rounded-lg w-full bg-input dark:focus:outline-none dark:focus:ring-ring focus:outline-none  focus:ring-2 dark:ring-1 focus:ring-ring dark:bg-input dark:border-border "
+                                    {...register("link_wa")}
+                                />
+                            </div>
+                            <div>
+                                <label className="flex  text-gray-700 dark:text-gray-300 font-medium">
+                                    Link Github
+                                </label>
+                                <Input
+                                    rows="4"
+                                    placeholder="Tell something about yourself..."
+                                    className="mt-1 p-2 border rounded-lg w-full bg-input dark:focus:outline-none dark:focus:ring-ring focus:outline-none  focus:ring-2 dark:ring-1 focus:ring-ring dark:bg-input dark:border-border "
+                                    {...register("link_git")}
                                 />
                             </div>
                         </div>

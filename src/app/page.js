@@ -19,6 +19,10 @@ import {
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
+import Testimonials from "@/components/Testimonials";
+import FAQ from "@/components/FAQ";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import SectionProd from "@/components/SectionProd";
 export default function Home() {
     const { theme } = useTheme();
     const [themeLoaded, setThemeLoaded] = useState(false);
@@ -99,12 +103,16 @@ export default function Home() {
                             </Button>
                         </div>
                     </section>
-                    <div className="mb-[77px]"></div>
+                    <div className="mb-[142px]"></div>
                     <Separator className="" />
-                
+                    <div className="">
+                        <SectionProd />
+                    </div>
+                    <Separator />
+                    <div className="pb-[500px]"></div>
 
-                    <section className="pb-[1000px]">
-                        {/*CAROUSEL THIS ONE */}
+                    {/* <section className="">
+                       
                         <h3 className=" text-2xl sm:text-3xl text-center mt-12 ">
                             Galeri XI RPL 2
                         </h3>
@@ -125,7 +133,8 @@ export default function Home() {
                                 </div>
                             </Slider>
                         </div>
-                    </section>
+                    </section> */}
+
                     <Separator className="" />
                 </div>
                 <Separator />

@@ -29,7 +29,7 @@ const RecentPosts = () => {
                     variant="link"
                     className={`flex-1 py-2 text-center ${
                         activeTab === "image"
-                            ? "border-b-2 border-border font-semibold"
+                            ? "border-b-2 border-blue-500 font-semibold"
                             : ""
                     }`}
                     onClick={() => handleTabClick("image")}

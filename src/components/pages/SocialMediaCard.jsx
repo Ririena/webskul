@@ -1,10 +1,15 @@
+"use client";
 // components/SocialMediaCard.js
 import React from "react";
 import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 import { Card } from "../ui/card";
 import Link from "next/link";
-
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 const SocialMediaCard = () => {
+    const router = useRouter();
+    const currentPathname = usePathname();
     const socialLinks = {
         facebook: "https://facebook.com",
         twitter: "https://twitter.com",
@@ -12,11 +17,17 @@ const SocialMediaCard = () => {
         linkedin: "https://linkedin.com",
     };
 
+    const handleEdit = () => {
+        router.push("/profile/editprofile");
+    };
     return (
         <Card className="bg-card shadow-lg rounded-lg p-6">
-            <h3 className="text-xl text-primary font-bold mb-4">
-                Social Media
-            </h3>
+            <div className="flex justify-between">
+                <h3 className="text-xl text-primary font-bold mb-4">
+                    Social Media
+                </h3>
+                <Button onClick={handleEdit}>Edit</Button>
+            </div>
             <div className="flex space-x-4">
                 <Link
                     href={socialLinks.facebook}
