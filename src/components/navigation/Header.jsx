@@ -41,8 +41,8 @@ export default function Header() {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="#" className="text-foreground">
-            Integrations
+          <Link href="/profile/editprofile" className="text-foreground">
+            Edit Profile
           </Link>
         </NavbarItem>
       </NavbarContent>

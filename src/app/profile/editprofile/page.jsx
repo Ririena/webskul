@@ -246,7 +246,7 @@ export default function EditProfile() {
                         <div className="flex justify-center gap-4 mt-6">
                             <Button
                                 className="w-full"
-                                variant="solid"
+                                variant="default"
                                 size="sm"
                                 type="submit"
                             >
