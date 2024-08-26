@@ -4,21 +4,9 @@ import { useEffect, useState, Suspense, lazy } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
-import {
-    Card,
-    CardFooter,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { Card, CardFooter, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { supabase } from "@/lib/supabase";
-import {
-    Pagination,
-    PaginationItem,
-    PaginationNext,
-    PaginationPrevious,
-} from "@/components/ui/pagination";
+import { Pagination, PaginationPrevious, PaginationNext } from "@/components/ui/pagination";
 import { Input } from "@/components/ui/input";
 import { useTheme } from "next-themes";
 
@@ -40,35 +28,13 @@ const PageSiswa = () => {
     useEffect(() => {
         const fetchSiswaData = async () => {
             try {
-                const { data: userData, error: userError } = await supabase
-                    .from("user")
-                    .select(
-                        "noIndukSiswa, username, email, profile_picture_url"
-                    );
+                const response = await fetch('/api/siswa');
+                const data = await response.json();
 
-                if (userError) throw userError;
+                if (data.error) throw new Error(data.error);
 
-                const { data: siswaData, error: siswaError } = await supabase
-                    .from("siswa")
-                    .select("*");
-
-                if (siswaError) throw siswaError;
-
-                const mergedData = siswaData.map((siswa) => {
-                    const user = userData.find(
-                        (user) => user.noIndukSiswa === siswa.noIndukSiswa
-                    );
-                    return {
-                        ...siswa,
-                        username: user ? user.username : "Unknown",
-                        profile_picture_url: user
-                            ? user.profile_picture_url
-                            : null,
-                    };
-                });
-
-                setSiswaList(mergedData);
-                setFilteredSiswaList(mergedData);
+                setSiswaList(data);
+                setFilteredSiswaList(data);
             } catch (error) {
                 console.error("Error fetching data:", error.message);
             } finally {
@@ -215,40 +181,29 @@ const PageSiswa = () => {
                                                 size="sm"
                                                 className=""
                                                 onClick={() =>
-                                                    router.push(
-                                                        `${currentPathname}/${siswa.noIndukSiswa}`
-                                                    )
+                                                    router.push(`/siswa/${siswa.noIndukSiswa}`)
                                                 }
                                             >
-                                                View Details
+                                                Lihat Detail
                                             </Button>
                                         </CardFooter>
                                     </Card>
-                                ))}
+                               ) )}
                         </Suspense>
                     </div>
 
-                    <div className="mt-6 flex justify-center">
-                        <Pagination className="flex items-center">
-                            <PaginationPrevious
-                                disabled={totalPages <= 1}
-                                onClick={() =>
-                                    handlePageChange(currentPage - 1)
-                                }
-                            >
-                                Previous
-                            </PaginationPrevious>
-
-                            <PaginationNext
-                                disabled={totalPages <= 1}
-                                onClick={() =>
-                                    handlePageChange(currentPage + 1)
-                                }
-                            >
-                                Next
-                            </PaginationNext>
-                        </Pagination>
-                    </div>
+                    <Pagination>
+                        <PaginationPrevious
+                            onClick={() => handlePageChange(currentPage - 1)}
+                        >
+                            Prev
+                        </PaginationPrevious>
+                        <PaginationNext
+                            onClick={() => handlePageChange(currentPage + 1)}
+                        >
+                            Next
+                        </PaginationNext>
+                    </Pagination>
                 </main>
             </div>
         </>

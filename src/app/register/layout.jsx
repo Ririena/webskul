@@ -1,4 +1,4 @@
-
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata = {
     title: 'Register | xipplg2-7.vercel.app',
@@ -22,6 +22,8 @@ export default function layout({ children }) {
     return (
       <>
         <main>{children}</main>
+        <Toaster />
+
       </>
     );
   }

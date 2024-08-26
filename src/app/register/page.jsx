@@ -16,8 +16,9 @@ import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-
+import { useToast } from "@/components/ui/use-toast";
 export default function RegisterPage() {
+    const {toast} = useToast()
   const { theme } = useTheme();
   const [themeLoaded, setThemeLoaded] = useState(false);
 
@@ -40,10 +41,21 @@ export default function RegisterPage() {
     });
 
     if (error) {
-      alert(error.message);
+        toast({
+            title: "Error",
+            description: "Ada Yang Error Dalam Server" + error,
+            variant: "destructive",
+        });
     } else {
-      alert("Registration successful! Please check your email to confirm your account.");
-      // Redirect or show further instructions after successful registration
+        toast({
+            title: "Berhasil Register",
+            description: "Register Berhasil, Silahkan Tunggu Beberapa Saat",
+            variant: "default",
+        });
+
+        setTimeout(2500)
+
+        router.push("/login")
     }
   };
 

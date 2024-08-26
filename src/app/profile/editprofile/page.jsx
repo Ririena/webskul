@@ -11,8 +11,9 @@ import { supabase } from "@/lib/supabase";
 import ImageCropper from "@/lib/ImageCropper";
 import { v4 as uuidv4 } from "uuid";
 import Image from "next/image";
-
+import { useToast } from "@/components/ui/use-toast";
 export default function EditProfile() {
+    const {toast} = useToast()
     const [profileImage, setProfileImage] = useState("/profile-picture.jpg"); // Default profile image
     const [userData, setUserData] = useState(null);
     const [imageToCrop, setImageToCrop] = useState(null);
@@ -106,7 +107,16 @@ export default function EditProfile() {
         if (error) {
             console.error("Error saving data:", error.message);
         } else {
-            console.log("Profile updated successfully.");
+            toast({
+                title: "Berhasil Mengupdate Profile",
+                description: "Di Redirecting Dalam Beberapa Saat",
+                variant: "default",
+            });
+
+            setTimeout(() => {
+                router.push(`/siswa/${userData.noIndukSiswa}`);
+            }, 2500);
+        
         }
     };
 
@@ -156,7 +166,7 @@ export default function EditProfile() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto p-6">
+        <div className="max-w-2xl mx-auto p-6 pb-20">
             <Card className=" rounded-lg shadow-lg">
                 <CardHeader>
                     <CardTitle className="text-2xl font-semibold text-center">
@@ -171,7 +181,7 @@ export default function EditProfile() {
                         {/* Profile Picture */}
                         <div className="flex flex-col items-center mb-4">
                             <Image
-                                src={profileImage}
+                                src={profileImage ? profileImage : "/default.webp"}
                                 alt="Profile"
                                 width={128}
                                 height={128}
