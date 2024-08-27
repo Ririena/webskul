@@ -13,7 +13,7 @@ export async function GET(request) {
     // Mengambil data user
     const { data: userData, error: userError } = await supabase
       .from('user')
-      .select('noIndukSiswa, username, profile_picture_url');
+      .select('noIndukSiswa, username, profile_picture_url, banner_url');
 
     if (userError) throw new Error(userError.message);
 
@@ -38,6 +38,7 @@ export async function GET(request) {
           ...siswa,
           username: user ? user.username : 'Unknown',
           profile_picture_url: user ? user.profile_picture_url : null,
+          banner_url: user ? user.banner_url : null,
         };
       })
       // Penerapan pencarian berdasarkan username

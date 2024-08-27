@@ -65,6 +65,12 @@ export default function Page() {
         return <p>No data available.</p>;
     }
 
+    const socialLinks = {
+        instagram: userData.link_ig || null,
+        github: userData.link_git || null,
+        whatsapp: userData.link_wa || null,
+    };
+
     return (
         <main className="mx-auto container p-6 space-y-6 pb-20">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -108,7 +114,7 @@ export default function Page() {
                 {/* Profile details column */}
                 <div className="col-span-1 md:col-span-2 space-y-6">
                     {/* Add Static Social Media Card */}
-                    <SocialMediaCard />
+                    <SocialMediaCard socialLinks={socialLinks} />
 
                     {/* Add Recent Posts Section */}
                     <RecentPosts />

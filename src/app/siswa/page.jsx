@@ -6,12 +6,16 @@ import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { Card, CardFooter, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Pagination, PaginationPrevious, PaginationNext } from "@/components/ui/pagination";
+import {
+    Pagination,
+    PaginationPrevious,
+    PaginationNext,
+} from "@/components/ui/pagination";
 import { Input } from "@/components/ui/input";
 import { useTheme } from "next-themes";
 
 // Dynamically import SkeletonCard
-const SkeletonCard = lazy(() => import('@/components/SkeletonCard'));
+const SkeletonCard = lazy(() => import("@/components/SkeletonCard"));
 
 const PageSiswa = () => {
     const { theme } = useTheme();
@@ -28,7 +32,7 @@ const PageSiswa = () => {
     useEffect(() => {
         const fetchSiswaData = async () => {
             try {
-                const response = await fetch('/api/siswa');
+                const response = await fetch("/api/siswa");
                 const data = await response.json();
 
                 if (data.error) throw new Error(data.error);
@@ -78,6 +82,7 @@ const PageSiswa = () => {
         } else {
             setCurrentPage(pageNumber);
         }
+        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     return (
@@ -117,78 +122,83 @@ const PageSiswa = () => {
                     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 xl:grid-cols-4 lg:gap-6">
                         <Suspense fallback={<SkeletonCard />}>
                             {loading
-                                ? Array.from({ length: itemsPerPage }).map((_, index) => (
-                                    <SkeletonCard key={index} />
-                                ))
+                                ? Array.from({ length: itemsPerPage }).map(
+                                      (_, index) => <SkeletonCard key={index} />
+                                  )
                                 : currentItems.map((siswa) => (
-                                    <Card
-                                        key={siswa.id}
-                                        className={`relative p-6 shadow-xl rounded-lg overflow-hidden text-gray-900 dark:text-gray-100 ${
-                                            siswa.gender === 1
-                                                ? "border-l-4 dark:border-l-2 border-blue-500 dark:border-blue-400"
-                                                : "border-l-4 dark:border-l-2 border-pink-500 dark:border-pink-400"
-                                        } bg-card dark:bg-card`}
-                                    >
-                                        <div className="absolute top-0 left-0 w-full h-32 overflow-hidden">
-                                            <img
-                                                src="/banner.jpg"
-                                                alt="Background"
-                                                className="object-cover w-full h-full "
-                                            />
-                                        </div>
-                                        <div className="relative mx-auto w-32 h-32 mt-4  rounded-full overflow-hidden">
-                                            <img
-                                                src={
-                                                    siswa.profile_picture_url ||
-                                                    "/default.webp"
-                                                }
-                                                alt={siswa.username}
-                                                className="object-cover w-full h-full"
-                                            />
-                                        </div>
-                                        <div className="relative text-center mt-20">
-                                            <h2 className="font-semibold text-lg">
-                                                {siswa.username}
-                                            </h2>
-                                            <p className="text-gray-500 dark:text-card-foreground">
-                                                Freelance Web Designer
-                                            </p>
-                                        </div>
-                                        <CardContent className="relative text-center mt-4">
-                                            <p className="text-sm text-card-foreground dark:text-card-foreground mb-4">
-                                                Gender:{" "}
-                                                {siswa.gender === 1
-                                                    ? "Laki Laki"
-                                                    : "Perempuan"}
-                                            </p>
-                                            <div className="text-sm ">
-                                                <Badge
-                                                    variant="outline"
-                                                    className={`text-sm ${
-                                                        siswa.gender === 1
-                                                            ? "text-blue-600 dark:text-blue-400"
-                                                            : "text-pink-600 dark:text-pink-400"
-                                                    }`}
-                                                >
-                                                    #{siswa.nomor_absen}
-                                                </Badge>
-                                            </div>
-                                        </CardContent>
+                                      <Card
+                                          key={siswa.id}
+                                          className={`relative p-6 shadow-xl rounded-lg overflow-hidden text-gray-900 dark:text-gray-100 ${
+                                              siswa.gender === 1
+                                                  ? "border-l-4 dark:border-l-2 border-blue-500 dark:border-blue-400"
+                                                  : "border-l-4 dark:border-l-2 border-pink-500 dark:border-pink-400"
+                                          } bg-card dark:bg-card`}
+                                      >
+                                          <div className="absolute top-0 left-0 w-full h-32 overflow-hidden">
+                                              <img
+                                                  src={
+                                                      siswa.banner_url ||
+                                                      "/banner.jpg"
+                                                  }
+                                                  alt="Background"
+                                                  className="object-cover w-full h-full "
+                                              />
+                                          </div>
+                                          <div className="relative mx-auto w-32 h-32 mt-4  rounded-full overflow-hidden">
+                                              <img
+                                                  src={
+                                                      siswa.profile_picture_url ||
+                                                      "/default.webp"
+                                                  }
+                                                  alt={siswa.username}
+                                                  className="object-cover w-full h-full"
+                                              />
+                                          </div>
+                                          <div className="relative text-center mt-20">
+                                              <h2 className="font-semibold text-lg">
+                                                  {siswa.username}
+                                              </h2>
+                                              <p className="text-gray-500 dark:text-card-foreground">
+                                                  Freelance Web Designer
+                                              </p>
+                                          </div>
+                                          <CardContent className="relative text-center mt-4">
+                                              <p className="text-sm text-card-foreground dark:text-card-foreground mb-4">
+                                                  Gender:{" "}
+                                                  {siswa.gender === 1
+                                                      ? "Laki Laki"
+                                                      : "Perempuan"}
+                                              </p>
+                                              <div className="text-sm ">
+                                                  <Badge
+                                                      variant="outline"
+                                                      className={`text-sm ${
+                                                          siswa.gender === 1
+                                                              ? "text-blue-600 dark:text-blue-400"
+                                                              : "text-pink-600 dark:text-pink-400"
+                                                      }`}
+                                                  >
+                                                      #{siswa.nomor_absen}
+                                                  </Badge>
+                                              </div>
+                                          </CardContent>
 
-                                        <CardFooter className="relative flex justify-center mt-4">
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                className=""
-                                                onClick={() =>
-                                                    router.push(`/siswa/${siswa.noIndukSiswa}`)
-                                                }
-                                            >
-                                                Lihat Detail
-                                            </Button>
-                                        </CardFooter>
-                                    </Card>
-                               ) )}
+                                          <CardFooter className="relative flex justify-center mt-4">
+                                              <Button
+                                                  variant="outline"
+                                                  size="sm"
+                                                  className=""
+                                                  onClick={() =>
+                                                      router.push(
+                                                          `/siswa/${siswa.noIndukSiswa}`
+                                                      )
+                                                  }
+                                              >
+                                                  Lihat Detail
+                                              </Button>
+                                          </CardFooter>
+                                      </Card>
+                                  ))}
                         </Suspense>
                     </div>
 
