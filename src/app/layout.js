@@ -9,6 +9,8 @@ export const metadata = {
     title: "XI RPL 2 SMKN 7 BALEENDAH",
     description: "Website Kelas XI RPL 2 SMKN 7 BALEENDAH",
     keywords: ['SMKN 7 BALEENDAH', 'XI RPL 2', 'Website', "Web Kelas", "Web Apps"],
+    publisher: 'Adlin, Duivion',
+    creator: 'Ariena Al Maalika',
     verification: {
         google: "3YiNQkygrshbd6IQGjPpI4KSa8vEejaJbeKzqWaWQ2c",
     },

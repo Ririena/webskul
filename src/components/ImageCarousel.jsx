@@ -18,10 +18,16 @@ const ImageCarousel = () => {
         setSelectedImage(null);
     };
 
-    const images = ["/myc1.jpg", "/myc2.jpg", "/myc3.jpg", "/myc4.jpg", "/myc5.jpg"];
+    const images = [
+        "/myc1.jpg",
+        "/myc2.jpg",
+        "/myc3.jpg",
+        "/myc4.jpg",
+        "/myc5.jpg",
+    ];
 
     return (
-        <section className="py-16">
+        <section className="py-16 bg-gray-100 dark:bg-neutral-900">
             <div className="container mx-auto px-4">
                 <h2 className="text-3xl font-bold text-center mb-8 sm:text-4xl">
                     Our Gallery
@@ -36,7 +42,8 @@ const ImageCarousel = () => {
                     centeredSlides={true}
                     slidesPerView={3} // Default slides per view
                     breakpoints={{
-                        0: { // Applies to mobile screens
+                        0: {
+                            // Applies to mobile screens
                             slidesPerView: 1.2, // Show 1 slide on smaller screens
                             spaceBetween: 10,
                         },
@@ -67,6 +74,7 @@ const ImageCarousel = () => {
                                     layout="fill"
                                     objectFit="cover"
                                     className="rounded-lg"
+                                    quality={50}
                                 />
                             </div>
                         </SwiperSlide>

@@ -24,6 +24,7 @@ import FAQ from "@/components/FAQ";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import SectionProd from "@/components/SectionProd";
 import ImageCarousel from "@/components/ImageCarousel";
+import SponsorSection from "@/components/SponsorSection";
 export default function Home() {
     const { theme } = useTheme();
     const [themeLoaded, setThemeLoaded] = useState(false);
@@ -107,13 +108,12 @@ export default function Home() {
                     <div className="mb-[142px]"></div>
                     <Separator className="" />
                     <div className="">
-                    <ImageCarousel/>
+                        <ImageCarousel />
                     </div>
                     <Separator />
-                    <div className="pb-[500px]"></div>
-
-                
-
+                    <FAQ />
+                    <Separator />
+                    <SponsorSection/>
                     <Separator className="" />
                 </div>
                 <Separator />

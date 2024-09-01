@@ -15,17 +15,17 @@ import {
       {
         question: "Apa saja program yang dipelajari?",
         answer:
-          "Di kelas ini, kamu akan belajar berbagai hal terkait pemrograman, desain UI/UX, database, hingga pengembangan aplikasi dan gim.",
+          "Di PPLG, kamu akan belajar berbagai hal terkait pemrograman, desain UI/UX, serta pemodelan database, yang intinya kebanyakan berbasis web",
       },
       {
         question: "Bagaimana cara bergabung dengan kelas ini?",
         answer:
-          "Untuk bergabung, kamu perlu mendaftar di jurusan PPLG saat masuk ke sekolah dan memilih program ini saat penjurusan.",
+          "Untuk bergabung, kamu perlu mendaftar di jurusan PPLG saat masuk ke sekolah SMKN 7 BALEENDAH dan memilih Program Studi PPLG saat pendaftaran.",
       },
     ];
   
     return (
-      <section className="py-16 px-4 bg-gray-100 dark:bg-neutral-900">
+      <section className="py-16 px-4 ">
         <h3 className="text-2xl sm:text-3xl text-center font-semibold mb-8">
           Frequently Asked Questions
         </h3>
