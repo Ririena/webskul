@@ -23,6 +23,7 @@ import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import SectionProd from "@/components/SectionProd";
+import ImageCarousel from "@/components/ImageCarousel";
 export default function Home() {
     const { theme } = useTheme();
     const [themeLoaded, setThemeLoaded] = useState(false);
@@ -106,34 +107,12 @@ export default function Home() {
                     <div className="mb-[142px]"></div>
                     <Separator className="" />
                     <div className="">
-                        <SectionProd />
+                    <ImageCarousel/>
                     </div>
                     <Separator />
                     <div className="pb-[500px]"></div>
 
-                    {/* <section className="">
-                       
-                        <h3 className=" text-2xl sm:text-3xl text-center mt-12 ">
-                            Galeri XI RPL 2
-                        </h3>
-                        <div className="flex justify-center items-center mb-8"></div>
-                        <div className=" slider-container space-x-4">
-                            <Slider {...settings}>
-                                <div>
-                                    <Image src="/myc2.jpg" />
-                                </div>
-                                <div>
-                                    <Image src="/myc2.jpg" />
-                                </div>
-                                <div>
-                                    <Image src="/myc2.jpg" />
-                                </div>
-                                <div>
-                                    <Image src="/myc2.jpg" />
-                                </div>
-                            </Slider>
-                        </div>
-                    </section> */}
+                
 
                     <Separator className="" />
                 </div>

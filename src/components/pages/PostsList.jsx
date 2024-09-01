@@ -1,28 +1,21 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import useInfiniteScroll from "react-infinite-scroll-hook";
 import { useForm } from "react-hook-form";
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import { supabase } from "@/lib/supabase";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { MessageCircle, Share, Trash2, Edit3 } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { getUserFromTable, getUserByEmail } from "@/lib/UserLibs";
-import { Trash2, Edit3 } from 'lucide-react';
+import { supabase } from "@/lib/supabase";
+import useInfiniteScroll from "react-infinite-scroll-hook";
+import { getUserByEmail, getUserFromTable } from "@/lib/UserLibs"; // Make sure to import these functions if not already
 import { Separator } from "../ui/separator";
-import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from "@/components/ui/sheet";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { MessageCircle } from "lucide-react";
 
 const POSTS_PER_PAGE = 1;
 
-const PostsList = () => {
+export default function Page() {
+    const [isOpen, setIsOpen] = useState(false);
     const [posts, setPosts] = useState([]);
     const [error, setError] = useState("");
     const [imageRatios, setImageRatios] = useState({});
@@ -32,7 +25,7 @@ const PostsList = () => {
     const [commentsMap, setCommentsMap] = useState({});
     const [selectedPostId, setSelectedPostId] = useState(null);
     const [editingCommentId, setEditingCommentId] = useState(null);
-    const [imageLoadingMap, setImageLoadingMap] = useState({}); // New state to track image loading status
+    const [imageLoadingMap, setImageLoadingMap] = useState({});
 
     const [sentryRef] = useInfiniteScroll({
         loading,
@@ -62,16 +55,28 @@ const PostsList = () => {
         }));
     };
 
-    const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
+    const {
+        register,
+        handleSubmit,
+        reset,
+        setValue,
+        formState: { errors },
+    } = useForm();
 
     useEffect(() => {
         const fetchCurrentUser = async () => {
             try {
                 const user = await getUserByEmail();
-                const userDataFromTable = await getUserFromTable(user.email);
-                setCurrentUser(userDataFromTable.id);
+                if (user) {
+                    const userDataFromTable = await getUserFromTable(
+                        user.email
+                    );
+                    if (userDataFromTable) {
+                        setCurrentUser(userDataFromTable.id); // Ensure currentUser is set correctly
+                    }
+                }
             } catch (error) {
-                return;
+                console.error("Error fetching current user:", error);
             }
         };
         fetchCurrentUser();
@@ -84,7 +89,15 @@ const PostsList = () => {
         try {
             const { data, error } = await supabase
                 .from("posts")
-                .select("*")
+                .select(
+                    `
+                    *,
+                    user: user_id (
+                        username,
+                        profile_picture_url
+                    )
+                `
+                )
                 .order("created_at", { ascending: false })
                 .range(
                     (pageNumber - 1) * POSTS_PER_PAGE,
@@ -168,6 +181,10 @@ const PostsList = () => {
 
     const onSubmit = async (data) => {
         try {
+            if (!currentUser) {
+                throw new Error("User must be logged in to comment.");
+            }
+
             if (editingCommentId) {
                 const { error } = await supabase
                     .from("comments")
@@ -191,17 +208,17 @@ const PostsList = () => {
 
                 setEditingCommentId(null);
             } else {
-                const { error } = await supabase
-                    .from("comments")
-                    .insert({
-                        content: data.comment,
-                        post_id: selectedPostId,
-                        user_id: currentUser,
-                    });
+                const { error } = await supabase.from("comments").insert({
+                    content: data.comment,
+                    post_id: selectedPostId,
+                    user_id: currentUser, // Ensure currentUser is passed here
+                });
 
                 if (error) throw error;
 
-                const updatedComments = await fetchCommentsForPosts([selectedPostId]);
+                const updatedComments = await fetchCommentsForPosts([
+                    selectedPostId,
+                ]);
                 setCommentsMap((prevCommentsMap) => ({
                     ...prevCommentsMap,
                     ...updatedComments,
@@ -272,212 +289,243 @@ const PostsList = () => {
     }, [posts]);
 
     return (
-        <div className="w-full sm:w-1/2 p-4">
-            {error && <p className="text-red-500">{error}</p>}
-            {posts.length === 0 ? (
-                <p>No posts available.</p>
-            ) : (
-                posts.map((post) => {
-                    const aspectRatio = imageRatios[post.id] || 16 / 9;
-                    const comments = commentsMap[post.id] || [];
-                    const isImageLoading = imageLoadingMap[post.id]; // Check if image is loading
-
-                    return (
-                        <Card key={post.id} className="mb-4">
-                            <CardHeader>
-                                <CardTitle>
-                                    {post.content || "Untitled Post"}
-                                </CardTitle>
-                            </CardHeader>
+        <>
+            <main className="bg-background dark:bg-background">
+                {posts.map((post) => (
+                    <div key={post.id}>
+                        <Card
+                            onClick={() => {
+                                setIsOpen(true);
+                                setSelectedPostId(post.id);
+                            }}
+                            className="w-[450px] rounded-lg shadow-lg cursor-pointer mb-4"
+                        >
                             <CardContent>
-                                {post.image_url && (
-                                    <AspectRatio
-                                        ratio={aspectRatio}
-                                        className="relative bg-muted"
-                                    >
-                                        {isImageLoading && (
-                                            <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded-md">
-                                                <div className="w-8 h-8 border-4 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-                                            </div>
-                                        )}
-                                        <Image
-                                            src={post.image_url}
-                                            alt="Post Image"
-                                            fill
-                                            className={`rounded-md object-cover ${isImageLoading ? 'invisible' : 'visible'}`}
-                                            onLoadStart={() => handleImageLoadStart(post.id)}
-                                            onLoad={(e) =>
-                                                handleImageLoadEnd(
-                                                    post.id,
-                                                    e.target.naturalWidth,
-                                                    e.target.naturalHeight
-                                                )
+                                <div className="flex flex-col items-center mt-6">
+                                    <Avatar className="mb-4">
+                                        <AvatarImage
+                                            src={
+                                                post.user.profile_picture_url ||
+                                                "/placeholder-user.jpg"
                                             }
                                         />
-                                    </AspectRatio>
-                                )}
-                                <Separator />
-                                <div className="grid grid-cols-2 gap-32">
-                                    <Sheet>
-                                        <SheetTrigger>
-                                            <Button
-                                                className="mt-4 w-full"
-                                                variant="outline"
-                                                onClick={() => setSelectedPostId(post.id)}
-                                            >
-                                                Komen
-                                                <span className="ml-1">
-                                                    <MessageCircle />
-                                                </span>
-                                            </Button>
-                                        </SheetTrigger>
-                                        <SheetContent
-                                            side="bottom"
-                                            className="flex justify-center items-center"
-                                        >
-                                            <div className="w-full max-w-md p-4">
-                                                <SheetHeader>
-                                                    <SheetTitle className="text-center">
-                                                        {editingCommentId
-                                                            ? "Edit Comment"
-                                                            : "Add a Comment"}
-                                                    </SheetTitle>
-                                                </SheetHeader>
-                                                <div className="p-4">
-                                                    <form
-                                                        onSubmit={handleSubmit(onSubmit)}
-                                                        className="space-y-4"
-                                                    >
-                                                        <div className="w-full flex justify-center">
-                                                            <Input
-                                                                type="text"
-                                                                {...register(
-                                                                    "comment",
-                                                                    { required: true }
-                                                                )}
-                                                                placeholder="Add a comment..."
-                                                                className="border p-2 w-full rounded"
-                                                            />
-                                                        </div>
-                                                        {errors.comment && (
-                                                            <p className="text-red-500 mt-1 text-center">
-                                                                Comment is required.
-                                                            </p>
-                                                        )}
-                                                        <div className="flex justify-center space-x-2">
-                                                            <Button
-                                                                type="submit"
-                                                                className="max-w-lg w-full"
-                                                            >
-                                                                {editingCommentId
-                                                                    ? "Update Comment"
-                                                                    : "Submit"}
-                                                            </Button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </SheetContent>
-                                    </Sheet>
-
-                                    {currentUser && (
-                                        <Sheet>
-                                            <SheetTrigger>
-                                                <Button
-                                                    className="mt-4 w-full"
-                                                    variant="outline"
-                                                >
-                                                    Delete <span className="ml-1">
-                                                        <Trash2/>
-                                                    </span>
-                                                </Button>
-                                            </SheetTrigger>
-                                            <SheetContent side="bottom">
-                                                <SheetHeader>
-                                                    <SheetTitle className="text-center">
-                                                        Confirm Deletion
-                                                    </SheetTitle>
-                                                </SheetHeader>
-                                                <div className="p-4 flex justify-center items-center">
-                                                    <Button
-                                                        onClick={() => deletePost(post.id)}
-                                                        className="max-w-lg w-full"
-                                                        variant="destructive"
-                                                    >
-                                                        Delete
-                                                    </Button>
-                                                </div>
-                                            </SheetContent>
-                                        </Sheet>
-                                    )}
+                                        <AvatarFallback>CN</AvatarFallback>
+                                    </Avatar>
+                                    <h3 className="text-md font-semibold">
+                                        {post.user.username || "Unknown User"}
+                                    </h3>
+                                    <h5 className="text-sm text-gray-500">
+                                        {new Date(
+                                            post.created_at
+                                        ).toLocaleDateString()}
+                                    </h5>
                                 </div>
-
                                 <div className="mt-4">
-                                    <h3 className="text-lg font-semibold">Comments:</h3>
-                                    <Separator />
-                                    <ul className="space-y-2">
-                                        {comments.map((comment) => (
-                                            <li key={comment.id} className="flex items-center space-x-4">
-                                                <Image
-                                                    src={comment.profile_picture_url}
-                                                    alt="Profile Picture"
-                                                    width={40}
-                                                    height={40}
-                                                    className="rounded-full"
-                                                />
-                                                <div>
-                                                    <p className="font-semibold">
-                                                        {comment.username}
-                                                    </p>
-                                                    <p>{comment.content}</p>
-                                                    {comment.user_id === currentUser && (
-                                                        <div className="flex space-x-2 mt-1">
-                                                            <Button
-                                                                size="sm"
-                                                                variant="outline"
-                                                                onClick={() => editComment(comment)}
-                                                            >
-                                                                <Edit3 className="mr-1" />
-                                                                Edit
-                                                            </Button>
-                                                            <Button
-                                                                size="sm"
-                                                                variant="destructive"
-                                                                onClick={() =>
-                                                                    deleteComment(comment.id, post.id)
-                                                                }
-                                                            >
-                                                                <Trash2 className="mr-1" />
-                                                                Delete
-                                                            </Button>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </li>
-                                        ))}
-                                    </ul>
+                                    <Image
+                                        src={
+                                            post.image_url ||
+                                            "/placeholder-image.jpg"
+                                        }
+                                        alt="Post Image"
+                                        height={500}
+                                        width={500}
+                                        className="rounded-md object-cover w-full h-auto"
+                                        layout="responsive"
+                                    />
+                                </div>
+                                <div className="px-4 py-2">
+                                    <h4 className="text-lg font-bold mt-4">
+                                        {post.title || "Untitled Post"}
+                                    </h4>
+                                </div>
+                                <Separator />
+                                <div className="flex justify-end px-4 py-2 space-x-4">
+                                    <MessageCircle className="text-gray-500 hover:text-primary cursor-pointer" />
+                                    <Share className="text-gray-500 hover:text-primary cursor-pointer" />
                                 </div>
                             </CardContent>
                         </Card>
-                    );
-                })
-            )}
-            <div className="text-center py-4">
-                {(loading || hasMore) && (
-                    <div ref={sentryRef}>
-                        {loading ? (
-                            <div className="flex items-center justify-center py-4">
-                                <div className="w-8 h-8 border-4 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-                                <p className="ml-2">Loading more posts...</p>
-                            </div>
-                        ) : (
-                            <p>No more posts to load.</p>
+
+                        {isOpen && selectedPostId === post.id && (
+                            <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                                <DialogContent className="sm:max-w-[800px] max-w-[90vw] max-h-[90vh] overflow-auto grid md:grid-cols-2 gap-4">
+                                    <div className="flex flex-col items-start justify-start gap-4 py-8">
+                                        <Image
+                                            src={
+                                                post.image_url ||
+                                                "/placeholder-image.jpg"
+                                            }
+                                            width={800}
+                                            height={600}
+                                            alt="Post image"
+                                            className="object-cover  rounded-lg w-full"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col items-start justify-start gap-4 py-8">
+                                        <div className="space-y-2">
+                                            <h2 className="text-2xl font-bold">
+                                                {post.title || "Untitled Post"}
+                                            </h2>
+                                            <div className="flex items-center gap-4">
+                                                <Avatar>
+                                                    <AvatarImage
+                                                        src={
+                                                            post.user
+                                                                .profile_picture_url ||
+                                                            "/placeholder-user.jpg"
+                                                        }
+                                                        alt={
+                                                            post.user
+                                                                .username ||
+                                                            "Unknown User"
+                                                        }
+                                                    />
+                                                    <AvatarFallback>
+                                                        CN
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div className="grid gap-1">
+                                                    <div className="font-medium">
+                                                        {post.user.username ||
+                                                            "Unknown User"}
+                                                    </div>
+                                                    <div className="text-xs text-muted-foreground">
+                                                        {new Date(
+                                                            post.created_at
+                                                        ).toLocaleDateString()}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p>
+                                                {post.content ||
+                                                    "No description available for this post."}
+                                            </p>
+                                        </div>
+
+                                        <div className="mt-4">
+                                            <h3 className="text-lg font-semibold">
+                                                Comments:
+                                            </h3>
+                                            <ul className="space-y-2">
+                                                {(
+                                                    commentsMap[post.id] || []
+                                                ).map((comment) => (
+                                                    <li
+                                                        key={comment.id}
+                                                        className="flex items-center space-x-4"
+                                                    >
+                                                        <Avatar>
+                                                            <AvatarImage
+                                                                src={
+                                                                    comment.profile_picture_url ||
+                                                                    "/placeholder-user.jpg"
+                                                                }
+                                                            />
+                                                            <AvatarFallback>
+                                                                CN
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <div>
+                                                            <p className="font-semibold">
+                                                                {
+                                                                    comment.username
+                                                                }
+                                                            </p>
+                                                            <p>
+                                                                {
+                                                                    comment.content
+                                                                }
+                                                            </p>
+                                                            {comment.user_id ===
+                                                                currentUser && (
+                                                                <div className="flex space-x-2 mt-1">
+                                                                    <Button
+                                                                        size="sm"
+                                                                        variant="outline"
+                                                                        onClick={() => {
+                                                                            setEditingCommentId(
+                                                                                comment.id
+                                                                            );
+                                                                            setValue(
+                                                                                "comment",
+                                                                                comment.content
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        <Edit3 className="mr-1" />
+                                                                        Edit
+                                                                    </Button>
+                                                                    <Button
+                                                                        size="sm"
+                                                                        variant="destructive"
+                                                                        onClick={() =>
+                                                                            deleteComment(
+                                                                                comment.id,
+                                                                                post.id
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        <Trash2 className="mr-1" />
+                                                                        Delete
+                                                                    </Button>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                        <form
+                                            onSubmit={handleSubmit(onSubmit)}
+                                            className="space-y-4 mt-4 w-full"
+                                        >
+                                            <div className="w-full">
+                                                <input
+                                                    type="text"
+                                                    {...register("comment", {
+                                                        required: true,
+                                                    })}
+                                                    placeholder="Add a comment..."
+                                                    className="border p-2 w-full rounded"
+                                                />
+                                            </div>
+                                            {errors.comment && (
+                                                <p className="text-red-500">
+                                                    Comment is required.
+                                                </p>
+                                            )}
+                                            <Button
+                                                type="submit"
+                                                className="w-full"
+                                            >
+                                                {editingCommentId
+                                                    ? "Update Comment"
+                                                    : "Submit"}
+                                            </Button>
+                                        </form>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
                         )}
                     </div>
-                )}
-            </div>
-        </div>
+                ))}
+                <div className="text-center py-4">
+                    {(loading || hasMore) && (
+                        <div ref={sentryRef}>
+                            {loading ? (
+                                <div className="flex items-center justify-center py-4">
+                                    <div className="w-8 h-8 border-4 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+                                    <p className="ml-2">
+                                        Loading more posts...
+                                    </p>
+                                </div>
+                            ) : (
+                                <p>No more posts to load.</p>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </main>
+        </>
     );
-};
-
-export default PostsList;
+}
