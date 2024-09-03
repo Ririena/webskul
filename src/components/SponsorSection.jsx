@@ -43,7 +43,9 @@ const SponsorSection = () => {
                     Honorable Mention
                 </h2>
 
-                <Person />
+                <div className="hidden sm:block">
+                    <Person />
+                </div>
             </div>
         </section>
     );

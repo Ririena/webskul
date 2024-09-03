@@ -32,12 +32,19 @@ export default async function sitemap() {
         const siswaDataWithUsernames = await Promise.all(userPromises);
 
         // Generate sitemap entries for each siswa
-        const siswaUrls = siswaDataWithUsernames.map(({ noIndukSiswa, username }) => ({
-            url: `https://xipplg2-7.vercel.app/siswa/${noIndukSiswa} - ${encodeURIComponent(username)}`,
-            lastModified: new Date().toISOString(),
-            changeFrequency: "monthly",
-            priority: 0.7,
-        }));
+        const siswaUrls = siswaDataWithUsernames.map(({ noIndukSiswa, username }) => {
+            // Replace spaces with dashes and remove trailing dashes
+            const sanitizedUsername = username
+                .replace(/\s+/g, "-")   // Replace spaces with dashes
+                .replace(/-+$/, '');    // Remove trailing dashes
+
+            return {
+                url: `https://xipplg2-7.vercel.app/siswa/${noIndukSiswa}-${encodeURIComponent(sanitizedUsername)}`,
+                lastModified: new Date().toISOString(),
+                changeFrequency: "monthly",
+                priority: 0.7,
+            };
+        });
 
         // Return the full sitemap
         return [

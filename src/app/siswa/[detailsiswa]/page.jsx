@@ -24,11 +24,13 @@ export default function Page() {
 
     const { detailsiswa } = useParams(); // Access the dynamic parameter
 
-    // Decode the parameter to handle any URL-encoded characters (like spaces)
+    // Decode the parameter to handle any URL-encoded characters
     const decodedDetailSiswa = decodeURIComponent(detailsiswa);
 
     // Split the parameter to extract noIndukSiswa and namaSiswa
-    const [noIndukSiswa, namaSiswa] = decodedDetailSiswa.split(" - ");
+    // Assume the first hyphen separates noIndukSiswa from namaSiswa
+    const [noIndukSiswa, ...namaSiswaParts] = decodedDetailSiswa.split("-");
+    const namaSiswa = namaSiswaParts.join("-");
 
     useEffect(() => {
         const fetchData = async () => {
