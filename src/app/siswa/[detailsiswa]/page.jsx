@@ -15,6 +15,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+
 export default function Page() {
     const [siswaData, setSiswaData] = useState(null);
     const [userData, setUserData] = useState(null);
@@ -23,6 +24,12 @@ export default function Page() {
 
     const { detailsiswa } = useParams(); // Access the dynamic parameter
 
+    // Decode the parameter to handle any URL-encoded characters (like spaces)
+    const decodedDetailSiswa = decodeURIComponent(detailsiswa);
+
+    // Split the parameter to extract noIndukSiswa and namaSiswa
+    const [noIndukSiswa, namaSiswa] = decodedDetailSiswa.split(" - ");
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -30,7 +37,7 @@ export default function Page() {
                 const { data: siswa, error: siswaError } = await supabase
                     .from("siswa")
                     .select("*")
-                    .eq("noIndukSiswa", detailsiswa)
+                    .eq("noIndukSiswa", noIndukSiswa)
                     .single();
 
                 if (siswaError) throw siswaError;
@@ -41,7 +48,7 @@ export default function Page() {
                 const { data: user, error: userError } = await supabase
                     .from("user")
                     .select("*")
-                    .eq("noIndukSiswa", detailsiswa)
+                    .eq("noIndukSiswa", noIndukSiswa)
                     .single();
 
                 if (userError) throw userError;
@@ -56,7 +63,7 @@ export default function Page() {
         };
 
         fetchData();
-    }, [detailsiswa]);
+    }, [noIndukSiswa]);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>{error}</p>;
@@ -98,13 +105,13 @@ export default function Page() {
                             <p className="text-sm dark:text-primary">
                                 No Induk Siswa: {siswaData.noIndukSiswa}
                             </p>
-                            <p className="text-sm  dark:text-primary">
+                            <p className="text-sm dark:text-primary">
                                 Gender:{" "}
                                 {siswaData.gender === 1
                                     ? "Laki Laki"
                                     : "Perempuan"}
                             </p>
-                            <p className="text-sm mt-4  dark:text-primary">
+                            <p className="text-sm mt-4 dark:text-primary">
                                 Bio: {userData.bio || "Bio not available."}
                             </p>
                         </CardContent>
@@ -122,7 +129,7 @@ export default function Page() {
 
                 {/* Additional information or actions column */}
                 <div className="col-span-1">
-                    <Card className=" shadow-lg rounded-lg p-6">
+                    <Card className="shadow-lg rounded-lg p-6">
                         <Button
                             className="w-full"
                             onClick={() => window.history.back()}

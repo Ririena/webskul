@@ -190,7 +190,7 @@ const PageSiswa = () => {
                                                   className=""
                                                   onClick={() =>
                                                       router.push(
-                                                          `/siswa/${siswa.noIndukSiswa}`
+                                                          `/siswa/${siswa.noIndukSiswa} - ${siswa.username}`
                                                       )
                                                   }
                                               >
