@@ -14,18 +14,19 @@ export default async function sitemap() {
 
         // Fetch user data for each siswa using their noIndukSiswa
         const userPromises = siswaList.map(async (siswa) => {
-            const { data: user, error: userError } = await supabase
+            const { data: users, error: userError } = await supabase
                 .from("user")
                 .select("username")
-                .eq("noIndukSiswa", siswa.noIndukSiswa)
-                .single(); // Assuming each siswa has a single corresponding user entry
+                .eq("noIndukSiswa", siswa.noIndukSiswa);
 
             if (userError) {
                 console.error(`Error fetching user data for ${siswa.noIndukSiswa}:`, userError.message);
                 return { noIndukSiswa: siswa.noIndukSiswa, username: "Unknown" }; // Default to "Unknown" if error
             }
 
-            return { noIndukSiswa: siswa.noIndukSiswa, username: user.username || "Unknown" };
+            // Handle case where no rows are returned
+            const username = users.length > 0 ? users[0].username : "Unknown";
+            return { noIndukSiswa: siswa.noIndukSiswa, username };
         });
 
         // Resolve all user data fetches
