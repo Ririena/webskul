@@ -14,6 +14,12 @@ export const metadata = {
     verification: {
         google: "3YiNQkygrshbd6IQGjPpI4KSa8vEejaJbeKzqWaWQ2c",
     },
+    openGraph: {
+        title: "XI RPL 2 SMKN 7 BALEENDAH",
+        description: "Website Kelas XI RPL 2 SMKN 7 BALEENDAH - DUIVION",
+        url: "https://xipplg2-7.vercel.app",
+        siteName: "Web XI PPLG 2 SMKN 7 BE"
+    }
 };
 
 export default function RootLayout({ children }) {
