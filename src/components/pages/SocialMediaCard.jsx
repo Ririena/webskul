@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Instagram, Github, Whatsapp } from "lucide-react";
+import { Instagram, Github } from "lucide-react";
 import { Card } from "../ui/card";
 import Link from "next/link";
 import { Button } from "../ui/button";
@@ -43,7 +43,7 @@ const SocialMediaCard = ({ socialLinks }) => {
                         <Github size={24} />
                     </Link>
                 )}
-                {socialLinks.whatsapp && (
+                {/* {socialLinks.whatsapp && (
                     <Link
                         href={socialLinks.whatsapp}
                         target="_blank"
@@ -52,7 +52,7 @@ const SocialMediaCard = ({ socialLinks }) => {
                     >
                         <Whatsapp size={24} />
                     </Link>
-                )}
+                )} */}
             </div>
         </Card>
     );
