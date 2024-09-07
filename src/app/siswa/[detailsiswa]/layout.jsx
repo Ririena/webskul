@@ -3,11 +3,9 @@ import { supabase } from "@/lib/supabase";
 export async function generateMetadata({ params }) {
   const { detailsiswa } = params;
 
-  // Split noIndukSiswa and namaSiswa
   const [noIndukSiswa, ...namaSiswaParts] = detailsiswa.split("-");
   const namaSiswa = namaSiswaParts.join("-");
 
-  // Fetch siswa data based on the noIndukSiswa
   const { data: siswa, error: siswaError } = await supabase
     .from("user")
     .select("username, bio")
@@ -26,7 +24,7 @@ export async function generateMetadata({ params }) {
   }
 
   const baseUrl = new URL("https://xipplg2-7.vercel.app");
-  const canonicalUrl = `${baseUrl}/siswa/${noIndukSiswa}-${encodeURIComponent(namaSiswa)}`;
+  const canonicalUrl = `https://xipplg2-7.vercel.app/siswa/${noIndukSiswa}-${encodeURIComponent(namaSiswa)}`;
 
   return {
     metadataBase: baseUrl,
