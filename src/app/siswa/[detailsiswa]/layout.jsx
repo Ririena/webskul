@@ -1,8 +1,9 @@
 import { supabase } from "@/lib/supabase";
 
+const BASE_URL = "https://xipplg2-7.vercel.app";
+
 export async function generateMetadata({ params }) {
   const { detailsiswa } = params;
-
   const [noIndukSiswa, ...namaSiswaParts] = detailsiswa.split("-");
   const namaSiswa = namaSiswaParts.join("-");
 
@@ -17,17 +18,16 @@ export async function generateMetadata({ params }) {
       title: "Student Not Found",
       description: "The requested student profile could not be found.",
       alternates: {
-        canonical: "/not-found",
+        canonical: `${BASE_URL}/not-found`,
       },
-      robots: "noindex, nofollow",
+      robots: "index, follow",
     };
   }
 
-  const baseUrl = new URL("https://xipplg2-7.vercel.app");
-  const canonicalUrl = `https://xipplg2-7.vercel.app/siswa/${noIndukSiswa}-${encodeURIComponent(namaSiswa)}`;
+  const canonicalUrl = `${BASE_URL}/siswa/${noIndukSiswa}-${encodeURIComponent(namaSiswa)}`;
 
   return {
-    metadataBase: baseUrl,
+    metadataBase: new URL(BASE_URL),
     title: `${siswa.username} - XI RPL 2`,
     description: `Lihat profil ${siswa.username}. Temukan informasi mengenai minat, latar belakang, dan pencapaian mereka.`,
     keywords: `${siswa.username}, Kelas XI RPL 2, profil siswa, ${siswa.bio || "siswa"}`,
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }) {
       title: `${siswa.username} - XI RPL 2`,
       description: `Lihat profil ${siswa.username}. Temukan informasi mengenai minat, latar belakang, dan pencapaian mereka.`,
       url: canonicalUrl,
-      images: `${baseUrl}/og-image.png`,
+
     },
   };
 }
