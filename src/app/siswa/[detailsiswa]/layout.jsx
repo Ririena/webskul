@@ -3,14 +3,14 @@ import { supabase } from "@/lib/supabase";
 export async function generateMetadata({ params }) {
   const { detailsiswa } = params;
 
-  // Pisahkan noIndukSiswa dan namaSiswa
+  // Split noIndukSiswa and namaSiswa
   const [noIndukSiswa, ...namaSiswaParts] = detailsiswa.split("-");
   const namaSiswa = namaSiswaParts.join("-");
 
   // Fetch siswa data based on the noIndukSiswa
   const { data: siswa, error: siswaError } = await supabase
     .from("user")
-    .select("*")
+    .select("username, bio")
     .eq("noIndukSiswa", noIndukSiswa)
     .single();
 
@@ -18,15 +18,32 @@ export async function generateMetadata({ params }) {
     return {
       title: "Student Not Found",
       description: "The requested student profile could not be found.",
+      alternates: {
+        canonical: "/not-found",
+      },
+      robots: "noindex, nofollow",
     };
   }
 
+  const baseUrl = new URL("https://xipplg2-7.vercel.app");
+  const canonicalUrl = `${baseUrl}/siswa/${noIndukSiswa}-${encodeURIComponent(namaSiswa)}`;
+
   return {
+    metadataBase: baseUrl,
     title: `${siswa.username} - XI RPL 2`,
-    description: `Lihat profil ${siswa.username} Temukan informasi mengenai minat, latar belakang, dan pencapaian mereka.`,
-    keywords: `${siswa.username}, Kelas XI RPL 2, profil siswa, Dengan Bio: ${siswa.bio || "siswa"}`,
+    description: `Lihat profil ${siswa.username}. Temukan informasi mengenai minat, latar belakang, dan pencapaian mereka.`,
+    keywords: `${siswa.username}, Kelas XI RPL 2, profil siswa, ${siswa.bio || "siswa"}`,
     author: siswa.username,
     robots: "index, follow",
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: `${siswa.username} - XI RPL 2`,
+      description: `Lihat profil ${siswa.username}. Temukan informasi mengenai minat, latar belakang, dan pencapaian mereka.`,
+      url: canonicalUrl,
+      images: `${baseUrl}/og-image.png`,
+    },
   };
 }
 
