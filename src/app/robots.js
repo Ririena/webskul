@@ -16,5 +16,6 @@ export default function robots() {
             },
         ],
         sitemap: 'https://xipplg2-7.vercel.app/sitemap.xml',
+        sitemap: 'https://xipplg2-7.vercel.app/sitemap/dynamic/sitemap.xml',
     };
 }
