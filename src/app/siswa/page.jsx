@@ -17,8 +17,6 @@ import { useTheme } from "next-themes";
 // Dynamically import SkeletonCard
 const SkeletonCard = lazy(() => import("@/components/SkeletonCard"));
 
-
-
 const PageSiswa = () => {
     const { theme } = useTheme();
     const router = useRouter();
@@ -30,15 +28,15 @@ const PageSiswa = () => {
     const [filterGender, setFilterGender] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
-const handleDetailClick = (siswa) => {
-    // Replace spaces with dashes and trim any trailing dashes
-    const sanitizedUsername = siswa.username
-        .replace(/\s+/g, '-')       // Replace spaces with dashes
-        .replace(/-+$/, '');        // Remove trailing dashes
-    // Construct the URL
-    const url = `${siswa.noIndukSiswa}-${sanitizedUsername}`;
-    router.push(`/siswa/${url}`);
-};
+    const handleDetailClick = (siswa) => {
+        // Replace spaces with dashes and trim any trailing dashes
+        const sanitizedUsername = siswa.username
+            .replace(/\s+/g, "-") // Replace spaces with dashes
+            .replace(/-+$/, ""); // Remove trailing dashes
+        // Construct the URL
+        const url = `${siswa.noIndukSiswa}-${sanitizedUsername}`;
+        router.push(`/siswa/${url}`);
+    };
     useEffect(() => {
         const fetchSiswaData = async () => {
             try {
@@ -198,9 +196,10 @@ const handleDetailClick = (siswa) => {
                                                   variant="outline"
                                                   size="sm"
                                                   className=""
-                                                  onClick={() =>
-                                                      handleDetailClick(siswa)
-                                                  }
+                                                  onClick={(e) => {
+                                                      e.preventDefault(); // Prevent default anchor behavior
+                                                      handleDetailClick(siswa); // Use router.push instead
+                                                  }}
                                               >
                                                   Lihat Detail
                                               </Button>

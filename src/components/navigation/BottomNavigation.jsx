@@ -25,7 +25,6 @@ export default function BottomNavigation() {
                     if (userDataFromTable) {
                         setCurrentUser(userDataFromTable.id); // Ensure currentUser is set correctly
                         setCurrentNIK(userDataFromTable.noIndukSiswa)
-                        console.log(userDataFromTable.noIndukSiswa)
                     }
                 }
             } catch (error) {
