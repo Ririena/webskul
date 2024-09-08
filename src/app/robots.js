@@ -15,7 +15,9 @@ export default function robots() {
                 disallow: ['/'],
             },
         ],
-        sitemap: 'https://xipplg2-7.vercel.app/sitemap.xml',
-        sitemap: 'https://xipplg2-7.vercel.app/sitemap/dynamic/sitemap.xml',
+        sitemap: [
+            'https://xipplg2-7.vercel.app/sitemap.xml',
+            'https://xipplg2-7.vercel.app/sitemap/dynamic/sitemap.xml',
+        ],
     };
 }
